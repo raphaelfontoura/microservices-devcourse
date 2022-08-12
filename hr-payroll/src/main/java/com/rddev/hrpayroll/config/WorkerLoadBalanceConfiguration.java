@@ -10,10 +10,11 @@ import reactor.core.publisher.Flux;
 import java.util.Arrays;
 import java.util.List;
 
+@Deprecated
 public class WorkerLoadBalanceConfiguration {
 
-    @Bean
-    @Primary
+//    @Bean
+//    @Primary
     ServiceInstanceListSupplier serviceInstanceListSupplier() {
         return new AppServiceInstanceListSupplier("hr-worker");
     }

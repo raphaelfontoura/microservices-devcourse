@@ -18,6 +18,7 @@ public class WorkerLoadBalanceConfiguration {
         return new AppServiceInstanceListSupplier("hr-worker");
     }
 
+
 }
 
 class AppServiceInstanceListSupplier implements ServiceInstanceListSupplier {

@@ -2,6 +2,7 @@ package com.rddev.hrpayroll.services;
 
 import com.rddev.hrpayroll.dto.Worker;
 import com.rddev.hrpayroll.entities.Payment;
+import com.rddev.hrpayroll.feignclients.WorkerFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,19 +14,12 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class PaymentService {
-    
-    @Value("${hr-worker.url}")
-    private String workerUrl;
-    
-    private final RestTemplate restTemplate;
+
+    private final WorkerFeignClient workerFeignClient;
 
     public Payment getPayment(Long workerId, Integer days) {
-        Worker worker = getWorkerById(workerId);
+        Worker worker = workerFeignClient.getWorker(workerId).getBody();
         return new Payment(worker.name(), worker.dailyIncome(), days);
     }
 
-    private Worker getWorkerById(Long workerId) {
-        Map<String, String> uriVariables = Map.of("id", workerId.toString());
-        return restTemplate.getForObject(workerUrl + "/workers/{id}", Worker.class, uriVariables);
-    }
 }

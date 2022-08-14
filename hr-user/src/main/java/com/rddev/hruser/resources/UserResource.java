@@ -1,6 +1,7 @@
 package com.rddev.hruser.resources;
 
 import com.rddev.hruser.dtos.UserViewDto;
+import com.rddev.hruser.entities.User;
 import com.rddev.hruser.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,10 @@ public class UserResource {
 
     @RequestMapping("/search")
     public ResponseEntity<UserViewDto> findByEmail(@RequestParam String email) {
-        UserViewDto dto = new UserViewDto(service.findByEmail(email));
-        return ResponseEntity.ok(dto);
+        User user = service.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new UserViewDto(user));
     }
 }

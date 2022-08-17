@@ -25,11 +25,11 @@ public class UserResource {
     }
 
     @RequestMapping("/search")
-    public ResponseEntity<UserViewDto> findByEmail(@RequestParam String email) {
+    public ResponseEntity<User> findByEmail(@RequestParam String email) {
         User user = service.findByEmail(email);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(new UserViewDto(user));
+        return ResponseEntity.ok(user);
     }
 }

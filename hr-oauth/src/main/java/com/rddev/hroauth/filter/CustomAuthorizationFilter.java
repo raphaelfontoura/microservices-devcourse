@@ -36,10 +36,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
-                    String token = JwtUtils.getToken(authorizationHeader);
-
-                    String username = JwtUtils.getUsername(token);
-                    String[] roles = JwtUtils.getRolesArray(token);
+                    String username = JwtUtils.getUsername(authorizationHeader);
+                    String[] roles = JwtUtils.getRolesArray(authorizationHeader);
 
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     for (String role : roles) {

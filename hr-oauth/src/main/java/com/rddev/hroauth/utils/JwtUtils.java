@@ -7,11 +7,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import java.util.Date;
 import java.util.List;
+import java.util.function.Function;
+
 
 public class JwtUtils {
 
     private static Algorithm algorithm = Algorithm.HMAC256("my-secret-key".getBytes());
     private static String issuer = "http://localhost:8765";
+    static JWTVerifier verifier = JWT.require(algorithm).build();
 
     public static String generateToken(String username, List<String> roles) {
         return JWT.create()
@@ -31,20 +34,17 @@ public class JwtUtils {
     }
 
     public static String getUsername(String token) {
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
+        DecodedJWT decodedJWT = verifier.verify(getToken(token));
         return decodedJWT.getSubject();
     }
 
     public static List<String> getRoles(String token) {
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
+        DecodedJWT decodedJWT = verifier.verify(getToken(token));
         return decodedJWT.getClaim("roles").asList(String.class);
     }
 
     public static String[] getRolesArray(String token) {
-        JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
+        DecodedJWT decodedJWT = verifier.verify(getToken(token));
         return decodedJWT.getClaim("roles").asArray(String.class);
     }
 

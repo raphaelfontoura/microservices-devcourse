@@ -55,16 +55,14 @@ public class UserResource {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String refreshToken = JwtUtils.getToken(authorizationHeader);
-
-                String username = JwtUtils.getUsername(refreshToken);
+                String username = JwtUtils.getUsername(authorizationHeader);
                 User user = service.findByEmail(username);
                 String token = JwtUtils.generateToken(user.getEmail(), user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList()));
 
                 response.addHeader(AUTHORIZATION, "Bearer " + token);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("token", token);
-                tokens.put("refresh_token", refreshToken);
+                tokens.put("refresh_token", JwtUtils.generateRefreshToken(user.getEmail()));
                 response.setContentType("application/json");
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
